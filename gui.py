@@ -127,30 +127,60 @@ def draw_map():
     subprocess.run([python_interpreter, "draw_route_on_map.py", "-l", os.path.join(temp_dir, "locations.yaml"), "-r", os.path.join(temp_dir, "route_output.yaml"), "-o", os.path.join(temp_dir, "map.html")])
     webbrowser.open(os.path.join(temp_dir, "map.html"))
 
+font_family = "Poppins"
+font_size = 12
+header_font = (font_family, 20, "bold")
+normal_font = (font_family, font_size)
+button_font = (font_family, font_size)
+
 root = tk.Tk()
 root.title("TSP Route Planner GUI")
+root.configure(bg="white")
 
-tk.Label(root, text="TSP Route Planner", font=("Helvetica", 16)).grid(row=0, column=0, columnspan=3, pady=10)
+style = ttk.Style()
+style.configure("TButton", font=button_font, padding=10)
+style.configure("TLabel", font=normal_font, background="white")
+style.configure("TFrame", background="white")
+style.configure("TCombobox", font=normal_font)
 
-tk.Button(root, text="Add Location", command=add_location, width=20).grid(row=1, column=0, padx=5, pady=5)
-tk.Button(root, text="Set Weights", command=set_weights, width=20).grid(row=2, column=0, padx=5, pady=5)
+header_label = tk.Label(root, text="TSP Route Planner", font=header_font, bg="white", fg="black")
+header_label.grid(row=0, column=0, columnspan=2, pady=10, sticky="W")
 
-tk.Label(root, text="Start Location:").grid(row=3, column=0, padx=5, pady=5, sticky="E")
-start_location_menu = ttk.Combobox(root, state="readonly")
-start_location_menu.grid(row=3, column=1, padx=5, pady=5, sticky="W")
+button_frame = ttk.Frame(root)
+button_frame.grid(row=1, column=0, columnspan=2, pady=10, sticky="W")
+
+add_button = ttk.Button(button_frame, text="Add Location", command=add_location)
+add_button.grid(row=0, column=0, padx=10, pady=5)
+
+weights_button = ttk.Button(button_frame, text="Set Weights", command=set_weights)
+weights_button.grid(row=0, column=1, padx=10, pady=5)
+
+location_frame = ttk.Frame(root, padding=10)
+location_frame.grid(row=2, column=0, columnspan=2, pady=10, sticky="W")
+
+start_label = ttk.Label(location_frame, text="Start Location:")
+start_label.grid(row=0, column=0, padx=5, pady=5, sticky="W")
+start_location_menu = ttk.Combobox(location_frame, state="readonly")
+start_location_menu.grid(row=0, column=1, padx=5, pady=5, sticky="W")
 start_location_menu.bind("<<ComboboxSelected>>", lambda _: update_required_stops())
 
-tk.Label(root, text="End Location:").grid(row=4, column=0, padx=5, pady=5, sticky="E")
-end_location_menu = ttk.Combobox(root, state="readonly")
-end_location_menu.grid(row=4, column=1, padx=5, pady=5, sticky="W")
+end_label = ttk.Label(location_frame, text="End Location:")
+end_label.grid(row=1, column=0, padx=5, pady=5, sticky="W")
+end_location_menu = ttk.Combobox(location_frame, state="readonly")
+end_location_menu.grid(row=1, column=1, padx=5, pady=5, sticky="W")
 end_location_menu.bind("<<ComboboxSelected>>", lambda _: update_required_stops())
 
-required_stops_frame = tk.Frame(root)
-required_stops_frame.grid(row=5, column=1, sticky="W", padx=5, pady=5)
-tk.Label(root, text="Required Stops (exclude start/end):").grid(row=5, column=0, padx=5, pady=5, sticky="NE")
+required_stops_label = ttk.Label(location_frame, text="Required Stops:")
+required_stops_label.grid(row=2, column=0, padx=5, pady=5, sticky="NW")
 
-tk.Button(root, text="Generate & Calculate Route", command=generate_files_and_calculate_route, width=30).grid(row=6, column=0, columnspan=3, padx=5, pady=10)
-tk.Button(root, text="Draw & Open Map", command=draw_map, width=30).grid(row=7, column=0, columnspan=3, padx=5, pady=10)
+required_stops_frame = ttk.Frame(location_frame)
+required_stops_frame.grid(row=2, column=1, sticky="W", padx=5, pady=5)
+
+generate_button = ttk.Button(root, text="Generate & Calculate Route", command=generate_files_and_calculate_route)
+generate_button.grid(row=3, column=0, padx=10, pady=10, sticky="W")
+
+draw_map_button = ttk.Button(root, text="Draw & Open Map", command=draw_map)
+draw_map_button.grid(row=4, column=0, padx=10, pady=10, sticky="W")
 
 load_locations()
 root.mainloop()
