@@ -30,7 +30,7 @@ The project is organized as follows:
 - Install required Python packages:
 
 ```bash
-pip install folium openrouteservice networkx pybind11 backoff
+pip install folium openrouteservice networkx pybind11 backoff pyyaml
 ```
 
 - A C++ compiler with C++17 support is recommended if you wish to compile the TSP algorithm for better performance.
